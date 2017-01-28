@@ -10,7 +10,7 @@
 	<form id="artist-form">
 
 		<!-- Label for Text Box -->
-		<label for="artist-input">Choose Your Artist</label>
+		<label for="artist-input">Tell me a musical artist that you like</label>
 
 		<!-- Text Input Box -->
 		<input type="text" id="artist-input"><br>
@@ -32,8 +32,15 @@
 
 		// Run an initial search to identify the artist unique Spotify ID
 		var queryURL = "https://api.spotify.com/v1/search?q=" + artist + "&type=artist";
-		$.ajax({url: queryURL, method: 'GET'}).done(function(response) {
+		$.ajax({url: queryURL, method: 'GET'})
 
+			.fail(function(response){
+				console.log("failure");
+				$("#playerDiv").text("Please try again");
+			})
+
+			.done(function(response) {
+			
 			// Prints the entire object to console
 			console.log(response);
 
@@ -46,7 +53,11 @@
 			//NEW STUFF
 			var queryURLGenre = "https://api.spotify.com/v1/search?q=" + genreID +'%20tag:hipster&type=album&market=US';
 
-			$.ajax({url: queryURLGenre, method: 'GET'}).done(function(genreResponse){
+			$.ajax({url: queryURLGenre, method: 'GET'})
+
+			// .fail(function(genreResponse))
+
+			.done(function(genreResponse){
 				console.log(genreResponse);
 				albumArray= genreResponse.albums.items;
 				var albumID = genreResponse.albums.items[Math.floor(Math.random() * albumArray.length)].id;
@@ -69,10 +80,11 @@
 
 				// Appends the new player into the HTML
                 $("#playerDiv").append(player)
-			})
-		}); 
+			})  //end of third ajax call
+		}); //end of second ajax call
+		});  //end of .done first ajax call
 
-		});	
+		// });	
 	}
 
 
