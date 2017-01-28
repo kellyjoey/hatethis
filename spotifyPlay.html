@@ -35,8 +35,8 @@
 		$.ajax({url: queryURL, method: 'GET'})
 
 			.fail(function(response){
-				console.log("failure");
-				$("#playerDiv").text("Please try again");
+				console.log("failure to find artist");
+				$("#playerDiv").text("Are you sure that's a real artist?");
 			})
 
 			.done(function(response) {
@@ -53,14 +53,15 @@
 			//NEW STUFF
 			var queryURLGenre = "https://api.spotify.com/v1/search?q=" + genreID +'%20tag:hipster&type=album&market=US';
 
-			$.ajax({url: queryURLGenre, method: 'GET'})
-
-			// .fail(function(genreResponse))
-
-			.done(function(genreResponse){
+			$.ajax({url: queryURLGenre, method: 'GET'}).done(function(genreResponse){
+				if (genreResponse.albums.items.length == 0){
+					console.log("failure to find album");
+					getArtistTrack();
+				}else{
 				console.log(genreResponse);
 				albumArray= genreResponse.albums.items;
 				var albumID = genreResponse.albums.items[Math.floor(Math.random() * albumArray.length)].id;
+			}
 				
 			
 
@@ -80,7 +81,9 @@
 
 				// Appends the new player into the HTML
                 $("#playerDiv").append(player)
-			})  //end of third ajax call
+            
+
+			}); //end of third ajax call
 		}); //end of second ajax call
 		});  //end of .done first ajax call
 
